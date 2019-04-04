@@ -1,4 +1,5 @@
 #Include C:\Users\Qriist\Desktop\Diablo II\Digest\lib\Determine_ISC_groups.ahk
+#Include C:\Users\Qriist\Desktop\Diablo II\Digest\lib\Determine_stat_groups.ahk
 #Include C:\Users\Qriist\Desktop\Diablo II\Digest\lib\Digest_Bin_110f_arena.ahk
 #Include C:\Users\Qriist\Desktop\Diablo II\Digest\lib\Digest_Bin_110f_armor.ahk
 #Include C:\Users\Qriist\Desktop\Diablo II\Digest\lib\Digest_Bin_110f_armtype.ahk
@@ -91,4 +92,4 @@
 #Include C:\Users\Qriist\Desktop\Diablo II\Digest\lib\Digest_Bin_110f_weapons.ahk
 #Include C:\Users\Qriist\Desktop\Diablo II\Digest\lib\Digest_JSON_110f_runes.ahk
 #Include C:\Users\Qriist\Desktop\Diablo II\Digest\lib\Format_descfunc_string.ahk
-#Include C:\Users\Qriist\Desktop\Diablo II\Digest\lib\GetT1ParamString.ahk
+#Include C:\Users\Qriist\Desktop\Diablo II\Digest\lib\InsertQuick.ahk
