@@ -5,7 +5,7 @@ Digest_Bin_110f_monstats(BinToDecompile)
 	Bin := FileOpen(BinToDecompile,"r")
 	Bin.Read(4)
 	RecordSize := 423
-
+	
 	loop, % (Bin.Length  - 4) / RecordSize
 	{
 		If ( (A_TickCount - StartTime) >= 10 ) OR (a_index=1)
@@ -62,7 +62,7 @@ Digest_Bin_110f_monstats(BinToDecompile)
 		Record["inventory"] := substr(Flags,32,1) 
 		Record["Code"] := Trim(Bin.Read(4))
 		Record["MonSound"] := Bin.ReadUShort() 
-		Record["UMonSound"] := Bin.ReadUShort() 
+		Record["UMonSound"] := Bin.ReadUShort()
 		Record["MonStatsEx"] := Bin.ReadUShort() 
 		Record["MonProp"] := Bin.ReadUShort() 
 		Record["MonType"] := Bin.ReadUShort() 
@@ -295,12 +295,25 @@ Digest_Bin_110f_monstats(BinToDecompile)
 		Record["SplEndGeneric"] := Bin.ReadUChar() 
 		Record["SplClientEnd"] := Bin.ReadUChar()
 		
-		if a_index = 1
-		{
-			For k,v in Record
-				Digest[ModFullName,"Keys","Decompile",Module] .= k ","
-			Digest[ModFullName,"Keys","Decompile",Module] := RTrim(Digest[ModFullName,"Keys","Decompile",Module],",")
-		}
+		Kill := "minion|2,"
+			. "MissA|2,"
+			. "MissC,"
+			. "MissS|4,"
+			. "MissSQ,"
+			. "MonProp,"
+			. "NextInClass,"
+			. "Skill|8,"
+			. "SkillDamage,"
+			. "spawn"
+		RecordKill(Record,Kill,65535)
+		
+		Kill := "sk$mode|8"
+		KillDepend := "sk$lvl,"
+			. "sk$modeType"
+		RecordKill(Record,Kill,65535,KillDepend,,"$")
+
+		InsertQuick("DigestDB","Decompile | " module,Record)		
+		
 		For k,v in Record
 		{
 			KeyCounter += 1

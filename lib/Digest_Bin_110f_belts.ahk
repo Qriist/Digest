@@ -5,7 +5,7 @@ Digest_Bin_110f_belts(BinToDecompile)
 	Bin := FileOpen(BinToDecompile,"r")
 	Bin.Read(4)
 	RecordSize := 264
-
+	
 	loop, % (Bin.Length  - 4) / RecordSize
 	{
 		If ( (A_TickCount - StartTime) >= 10 ) OR (a_index=1)
@@ -26,13 +26,14 @@ Digest_Bin_110f_belts(BinToDecompile)
 			Record["box" a_index "bottom"] := Bin.ReadUInt() 
 		}
 		
+		Kill := "Id,"
+			. "box$left|16,"
+			. "box$right|16,"
+			. "box$top|16,"
+			. "box$bottom|16"
+		RecordKill(Record,Kill,0,,"$")
+		InsertQuick("DigestDB","Decompile | " module,Record)		
 		
-		if a_index = 1
-		{
-			For k,v in Record
-				Digest[ModFullName,"Keys","Decompile",Module] .= k ","
-			Digest[ModFullName,"Keys","Decompile",Module] := RTrim(Digest[ModFullName,"Keys","Decompile",Module],",")
-		}
 		For k,v in Record
 		{
 			KeyCounter += 1

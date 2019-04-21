@@ -5,7 +5,7 @@ Digest_Bin_110f_rareprefix(BinToDecompile)
 	Bin := FileOpen(BinToDecompile,"r")
 	Bin.Read(4)
 	RecordSize := 72
-
+	
 	loop, % (Bin.Length  - 4) / RecordSize
 	{
 		If ( (A_TickCount - StartTime) >= 10 ) OR (a_index=1)
@@ -34,14 +34,17 @@ Digest_Bin_110f_rareprefix(BinToDecompile)
 		Record["etype4"] := Bin.ReadUShort() 
 		Record["name"] := Trim(Bin.Read(32))
 		Record["iPadding17"] := Bin.ReadUShort()
-		if a_index = 1
-		{
-			For k,v in Record
-				Digest[ModFullName,"Keys","Decompile",Module] .= k ","
-			Digest[ModFullName,"Keys","Decompile",Module] := RTrim(Digest[ModFullName,"Keys","Decompile",Module],",")
-		}
-		Kill=itype|7,etype|4
+		
+		Kill := "itype|7,"
+			. "etype|4,"
+			. "version"
 		RecordKill(Record,kill,0)
+		
+		Kill := "iPadding|18"
+		RecordKill(Record,kill,0,,-1)
+		
+		InsertQuick("DigestDB","Decompile | " module,Record)		
+		
 		For k,v in Record
 		{
 			KeyCounter += 1

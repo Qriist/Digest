@@ -5,7 +5,7 @@ Digest_Bin_110f_monequip(BinToDecompile)
 	Bin := FileOpen(BinToDecompile,"r")
 	Bin.Read(4)
 	RecordSize := 28
-
+	
 	loop, % (Bin.Length  - 4) / RecordSize
 	{
 		If ( (A_TickCount - StartTime) >= 10 ) OR (a_index=1)
@@ -29,12 +29,22 @@ Digest_Bin_110f_monequip(BinToDecompile)
 		Record["mod2"] := Bin.ReadUChar() 
 		Record["mod3"] := Bin.ReadUChar() 
 		Record["iPadding6"] := Bin.ReadUShort()
-		if a_index = 1
-		{
-			For k,v in Record
-				Digest[ModFullName,"Keys","Decompile",Module] .= k ","
-			Digest[ModFullName,"Keys","Decompile",Module] := RTrim(Digest[ModFullName,"Keys","Decompile",Module],",")
-		}
+		
+		Kill := "item|3"
+		RecordKill(Record,Kill,"")
+		
+		Kill := "loc|3,"
+			. "mod|3,"
+			. "iPadding6,"
+			. "Level,"
+			. "oninit"
+		RecordKill(Record,Kill,0)
+		
+		Kill := "monster"
+		RecordKill(Record,Kill,65535)
+		
+		InsertQuick("DigestDB","Decompile | " module,Record)		
+		
 		For k,v in Record
 		{
 			KeyCounter += 1

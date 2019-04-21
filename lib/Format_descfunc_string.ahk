@@ -21,7 +21,7 @@ some values and what they display (descval used: 1, see below):
 	sx := Trim(sx)
 	sy := Trim(sy)
 
-	_sx := a_space sx
+	_sx := a_space sx	;"shortcuts" to cleanup the equations
 	sx_ := sx A_Space
 	_sy := a_space sy
 	sy_ := sy a_space
@@ -315,7 +315,9 @@ some values and what they display (descval used: 1, see below):
 			s := "f " f " placeholder d" d " | " sx vzb
 		;~ msgbox % "vr:"vr "`nvn:" vn "`nvx:" vx "`nsx:" sx "`nsy:" sy "`np:" p "`nd:" d
 	}
-	else if f = 19 ; this is used by stats that use Blizzard's sprintf implementation (if you don't know what that is, it won't be of interest to you eitherway I guess), look at how prismatic is setup, the string is the format that gets passed to their sprintf spinoff. 
+	else if f = 19 ; this is used by stats that use Blizzard's sprintf implementation 
+				;(if you don't know what that is, it won't be of interest to you eitherway I guess), 
+				;look at how prismatic is setup, the string is the format that gets passed to their sprintf spinoff. 
 	{
 		if d = 1
 			s := "f " f " placeholder d" d " | " sx vzb

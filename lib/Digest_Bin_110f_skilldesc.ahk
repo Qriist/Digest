@@ -7,11 +7,11 @@ Digest_Bin_110f_skilldesc(BinToDecompile)
 	RecordSize := 288
 	
 	for k,v in Digest[ModFullName,"String"]
-		{
-			DummySearch := StringCodeToNumber(Digest[ModFullName,"String"],k,"dummy")
-			break
-		}
-		
+	{
+		DummySearch := StringCodeToNumber(Digest[ModFullName,"String"],k,"dummy")
+		break
+	}
+	
 	loop, % (Bin.Length  - 4) / RecordSize
 	{
 		If ( (A_TickCount - StartTime) >= 10 ) OR (a_index=1)
@@ -139,23 +139,51 @@ Digest_Bin_110f_skilldesc(BinToDecompile)
 		Record["dsc3calcb5"] := Bin.ReadUInt() 
 		Record["dsc3calcb6"] := Bin.ReadUInt() 
 		Record["dsc3calcb7"] := Bin.ReadUInt()
-		if a_index = 1
-		{
-			For k,v in Record
-				Digest[ModFullName,"Keys","Decompile",Module] .= k ","
-			Digest[ModFullName,"Keys","Decompile",Module] := RTrim(Digest[ModFullName,"Keys","Decompile",Module],",")
-		}
-		Kill=descline|6,dsc2line|4,dsc3line|7,p$dmelem|3,SkillColumn,SkillPage,SkillRow,ListPool,ListRow,acPadding2,bPadding20,acPadding20_1,acPadding20_2
+		
+		Kill := "descline|6,"
+			. "dsc2line|4,"
+			. "dsc3line|7,"
+			. "p$dmelem|3,"
+			. "SkillColumn,"
+			. "SkillPage,"
+			. "SkillRow,"
+			. "ListPool,"
+			. "ListRow,"
+			. "acPadding2,"
+			. "bPadding20,"
+			. "acPadding20_1,"
+			. "acPadding20_2"
 		RecordKill(Record,kill,0,,,"$")
 		
-		Kill=descmissile|3
+		Kill := "descmissile|3"
 		RecordKill(Record,kill,65535)
 		
-		Kill=ddam calc|2,p$dmelem|3,p$dmmin|3,p$dmmax|3,desccalca|6,dsc2calca|4,dsc3calca|7,desccalcb|6,dsc2calcb|4,dsc3calcb|7
+		Kill := "ddam calc|2,"
+			. "p$dmelem|3,"
+			. "p$dmmin|3,"
+			. "p$dmmax|3,"
+			. "desccalca|6,"
+			. "dsc2calca|4,"
+			. "dsc3calca|7,"
+			. "desccalcb|6,"
+			. "dsc2calcb|4,"
+			. "dsc3calcb|7"
 		RecordKill(Record,kill,4294967295,KillDepend,,"$")
 		
-		Kill=desctexta|6,dsc2texta|4,dsc3texta|7,desctextb|6,dsc2textb|4,dsc3textb|7,str name,str short,str long,str alt,str mana
+		Kill := "desctexta|6,"
+			. "dsc2texta|4,"
+			. "dsc3texta|7,"
+			. "desctextb|6,"
+			. "dsc2textb|4,"
+			. "dsc3textb|7,"
+			. "str name,"
+			. "str short,"
+			. "str long,"
+			. "str alt,"
+			. "str mana"
 		RecordKill(Record,Kill,DummySearch)
+		
+		InsertQuick("DigestDB","Decompile | " module,Record)		
 		
 		For k,v in Record
 		{

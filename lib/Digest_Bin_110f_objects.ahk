@@ -5,7 +5,7 @@ Digest_Bin_110f_objects(BinToDecompile)
 	Bin := FileOpen(BinToDecompile,"r")
 	Bin.Read(4)
 	RecordSize := 448
-
+	
 	loop, % (Bin.Length  - 4) / RecordSize
 	{
 		If ( (A_TickCount - StartTime) >= 10 ) OR (a_index=1)
@@ -210,15 +210,12 @@ Digest_Bin_110f_objects(BinToDecompile)
 		Record["OpenWarp"] := Bin.ReadUInt() 
 		Record["AutoMap"] := Bin.ReadUInt()
 		
-		if a_index = 1
-		{
-			For k,v in Record
-				Digest[ModFullName,"Keys","Decompile",Module] .= k ","
-			Digest[ModFullName,"Keys","Decompile",Module] := RTrim(Digest[ModFullName,"Keys","Decompile",Module],",")
-		}
 		
 		Kill := "iPadding|104,SpawnMax,Selectable|8,TrapProb,SizeX,SizeY,FrameCnt|8,FrameDelta|8,CycleAnim|8,Lit|8,BlocksLight|8,HasCollision|8,IsAttackable0,Start|8,OrderFlag|8,EnvEffect,IsDoor,BlocksVis,Orientation,PreOperate,Trans,Mode|8,Xoffset,Yoffset,Draw,HD,TR,LG,RA,LA,RH,LH,SH,S|9,TotalPieces,Xspace,Yspace,Red,Green,Blue,SubClass,NameOffset,MonsterOK,OperateRange,ShrineFunction,Lockable,Gore,Restore,RestoreVirgins,Sync,iPadding93_1,Parm|8,nTgtFX,nTgtFY,nTgtBX,nTgtBY,Damage,CollisionSubst,Left,Top,Width,Height,Beta,InitFn,PopulateFn,OperateFn,ClientFn,Overlay,BlockMissile,DrawUnder,OpenWarp,AutoMap"
 		RecordKill(Record,kill,0,,-1)
+		
+		InsertQuick("DigestDB","Decompile | " module,Record)		
+		
 		For k,v in Record
 		{
 			KeyCounter += 1

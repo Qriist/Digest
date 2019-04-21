@@ -326,7 +326,7 @@ Class SQLiteDB Extends SQLiteDB.BaseClass {
    ; PRIVATE _ErrMsg
    ; ===================================================================================================================
    _ErrMsg() {
-      If (RC := DllCall("SQLite3.dll\sqlite3_errmsg", "Ptr", This._Handle, "Cdecl UPtr"))
+      If (RC := DllCall("SQlite3.dll\sqlite3_errmsg", "Ptr", This._Handle, "Cdecl UPtr"))
          Return StrGet(&RC, "UTF-8")
       Return ""
    }
@@ -334,13 +334,13 @@ Class SQLiteDB Extends SQLiteDB.BaseClass {
    ; PRIVATE _ErrCode
    ; ===================================================================================================================
    _ErrCode() {
-      Return DllCall("SQLite3.dll\sqlite3_errcode", "Ptr", This._Handle, "Cdecl Int")
+      Return DllCall("SQlite3.dll\sqlite3_errcode", "Ptr", This._Handle, "Cdecl Int")
    }
    ; ===================================================================================================================
    ; PRIVATE _Changes
    ; ===================================================================================================================
    _Changes() {
-      Return DllCall("SQLite3.dll\sqlite3_changes", "Ptr", This._Handle, "Cdecl Int")
+      Return DllCall("SQlite3.dll\sqlite3_changes", "Ptr", This._Handle, "Cdecl Int")
    }
    ; ===================================================================================================================
    ; PRIVATE _Returncode
@@ -537,7 +537,7 @@ Class SQLiteDB Extends SQLiteDB.BaseClass {
       If (RC) {
          This.ErrorMsg := StrGet(Err, "UTF-8")
          This.ErrorCode := RC
-         DllCall("SQLite3.dll\sqlite3_free", "Ptr", Err, "Cdecl")
+         DllCall("SQlite3.dll\sqlite3_free", "Ptr", Err, "Cdecl")
          Return False
       }
       This.Changes := This._Changes()
@@ -587,14 +587,14 @@ Class SQLiteDB Extends SQLiteDB.BaseClass {
       If (RC) {
          This.ErrorMsg := StrGet(Err, "UTF-8")
          This.ErrorCode := RC
-         DllCall("SQLite3.dll\sqlite3_free", "Ptr", Err, "Cdecl")
+         DllCall("SQlite3.dll\sqlite3_free", "Ptr", Err, "Cdecl")
          Return False
       }
       TB := new This._Table
       TB.ColumnCount := Cols
       TB.RowCount := Rows
       If (MaxResult = -1) {
-         DllCall("SQLite3.dll\sqlite3_free_table", "Ptr", Table, "Cdecl")
+         DllCall("SQlite3.dll\sqlite3_free_table", "Ptr", Table, "Cdecl")
          If (ErrorLevel) {
             This.ErrorMsg := "DLLCall sqlite3_free_table failed!"
             This.ErrorCode := ErrorLevel
@@ -626,7 +626,7 @@ Class SQLiteDB Extends SQLiteDB.BaseClass {
       }
       If (GetRows)
          TB.HasRows := True
-      DllCall("SQLite3.dll\sqlite3_free_table", "Ptr", Table, "Cdecl")
+      DllCall("SQlite3.dll\sqlite3_free_table", "Ptr", Table, "Cdecl")
       If (ErrorLevel) {
          TB := ""
          This.ErrorMsg := "DLLCall sqlite3_free_table failed!"
@@ -732,7 +732,7 @@ Class SQLiteDB Extends SQLiteDB.BaseClass {
          Return False
       }
       RowID := 0
-      RC := DllCall("SQLite3.dll\sqlite3_last_insert_rowid", "Ptr", This._Handle, "Cdecl Int64")
+      RC := DllCall("SQlite3.dll\sqlite3_last_insert_rowid", "Ptr", This._Handle, "Cdecl Int64")
       If (ErrorLevel) {
          This.ErrorMsg := "DLLCall sqlite3_last_insert_rowid failed!"
          This.ErrorCode := ErrorLevel
@@ -756,7 +756,7 @@ Class SQLiteDB Extends SQLiteDB.BaseClass {
          Return False
       }
       Rows := 0
-      RC := DllCall("SQLite3.dll\sqlite3_total_changes", "Ptr", This._Handle, "Cdecl Int")
+      RC := DllCall("SQlite3.dll\sqlite3_total_changes", "Ptr", This._Handle, "Cdecl Int")
       If (ErrorLevel) {
          This.ErrorMsg := "DLLCall sqlite3_total_changes failed!"
          This.ErrorCode := ErrorLevel
@@ -782,7 +782,7 @@ Class SQLiteDB Extends SQLiteDB.BaseClass {
       }
       If Timeout Is Not Integer
          Timeout := 1000
-      RC := DllCall("SQLite3.dll\sqlite3_busy_timeout", "Ptr", This._Handle, "Cdecl Int")
+      RC := DllCall("SQlite3.dll\sqlite3_busy_timeout", "Ptr", This._Handle, "Cdecl Int")
       If (ErrorLevel) {
          This.ErrorMsg := "DLLCall sqlite3_busy_timeout failed!"
          This.ErrorCode := ErrorLevel
@@ -814,14 +814,14 @@ Class SQLiteDB Extends SQLiteDB.BaseClass {
          Return True
       OP := Quote ? "%Q" : "%q"
       This._StrToUTF8(Str, UTF8)
-      Ptr := DllCall("SQLite3.dll\sqlite3_mprintf", "Ptr", &OP, "Ptr", &UTF8, "Cdecl UPtr")
+      Ptr := DllCall("SQlite3.dll\sqlite3_mprintf", "Ptr", &OP, "Ptr", &UTF8, "Cdecl UPtr")
       If (ErrorLevel) {
          This.ErrorMsg := "DLLCall sqlite3_mprintf failed!"
          This.ErrorCode := ErrorLevel
          Return False
       }
       Str := This._UTF8ToStr(Ptr)
-      DllCall("SQLite3.dll\sqlite3_free", "Ptr", Ptr, "Cdecl")
+      DllCall("SQlite3.dll\sqlite3_free", "Ptr", Ptr, "Cdecl")
       Return True
    }
    ; ===================================================================================================================

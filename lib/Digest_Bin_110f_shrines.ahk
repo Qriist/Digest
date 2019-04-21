@@ -5,7 +5,7 @@ Digest_Bin_110f_shrines(BinToDecompile)
 	Bin := FileOpen(BinToDecompile,"r")
 	Bin.Read(4)
 	RecordSize := 184
-
+	
 	loop, % (Bin.Length  - 4) / RecordSize
 	{
 		If ( (A_TickCount - StartTime) >= 10 ) OR (a_index=1)
@@ -52,14 +52,10 @@ Digest_Bin_110f_shrines(BinToDecompile)
 		Record["iPadding44"] := Bin.ReadUShort() 
 		Record["effectclass"] := Bin.ReadUShort() 
 		Record["LevelMin"] := Bin.ReadUShort() 
-		Record["iPadding45"] := 
-Bin.ReadUShort()
-		if a_index = 1
-		{
-			For k,v in Record
-				Digest[ModFullName,"Keys","Decompile",Module] .= k ","
-			Digest[ModFullName,"Keys","Decompile",Module] := RTrim(Digest[ModFullName,"Keys","Decompile",Module],",")
-		}
+		Record["iPadding45"] := Bin.ReadUShort()
+		
+		InsertQuick("DigestDB","Decompile | " module,Record)		
+		
 		For k,v in Record
 		{
 			KeyCounter += 1

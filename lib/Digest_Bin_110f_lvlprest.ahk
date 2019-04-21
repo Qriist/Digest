@@ -5,7 +5,7 @@ Digest_Bin_110f_lvlprest(BinToDecompile)
 	Bin := FileOpen(BinToDecompile,"r")
 	Bin.Read(4)
 	RecordSize := 432
-
+	
 	loop, % (Bin.Length  - 4) / RecordSize
 	{
 		If ( (A_TickCount - StartTime) >= 10 ) OR (a_index=1)
@@ -48,6 +48,9 @@ Digest_Bin_110f_lvlprest(BinToDecompile)
 		}
 		Kill=LevelId,Populate,Logicals,Outdoors,Animate,KillEdge,FillBlanks,Expansion,iPadding9,SizeX,SizeY,Scan,Pops,PopPad,File|6
 		RecordKill(Record,Kill,0)
+		
+		InsertQuick("DigestDB","Decompile | " module,Record)		
+		
 		For k,v in Record
 		{
 			KeyCounter += 1

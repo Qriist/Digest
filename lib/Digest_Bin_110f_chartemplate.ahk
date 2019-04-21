@@ -5,7 +5,7 @@ Digest_Bin_110f_chartemplate(BinToDecompile)
 	Bin := FileOpen(BinToDecompile,"r")
 	Bin.Read(4)
 	RecordSize := 240
-
+	
 	loop, % (Bin.Length  - 4) / RecordSize
 	{
 		If ( (A_TickCount - StartTime) >= 10 ) OR (a_index=1)
@@ -57,7 +57,7 @@ Digest_Bin_110f_chartemplate(BinToDecompile)
 			Record["item" a_index "loc"] := Bin.ReadUChar() 
 			Record["item" a_index "count"] := Bin.ReadUChar() 
 			Record["iPadding31"] := 
-	Bin.ReadUShort() 
+			Bin.ReadUShort() 
 		}
 		Record["item2"] := Bin.Read(4) 
 		Record["item2loc"] := Bin.ReadUChar() 
@@ -127,6 +127,10 @@ Digest_Bin_110f_chartemplate(BinToDecompile)
 		Kill=item$|15
 		KillDepend=item$loc,item$count
 		RecordKill(Record,kill,0,KillDepend,,"$")
+		
+		
+		InsertQuick("DigestDB","Decompile | " module,Record)		
+		
 		For k,v in Record
 		{
 			KeyCounter += 1

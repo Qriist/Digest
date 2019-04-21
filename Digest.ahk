@@ -125,7 +125,7 @@ MasterListFile=
 Stage0:
 ;~ GoToMod=1.10f
 ;~ GoToMod=The Forces of Darkness
-;GoToMod=Reign of Shadow
+GoToMod=Reign of Shadow
 ;GoToMod=Pagan Heart
 ;GoToMod=Aftermath
 ;GoToMod=Hell Unleashed - Oblivion
@@ -137,7 +137,7 @@ Stage0:
 ;GoToMod=Battle for Elements
 ;~ GoToMod=Blackened
 ;GoToMod=The Puppeteer
-GoToMod=Dark Alliance
+;GoToMod=Dark Alliance
 ;Build the MPQ list
 
 Loop,Files,%DiabloIIDir%\MODS\*,D
@@ -599,8 +599,8 @@ Loop,Files,%DiabloIIDir%\MODS\*,D
 		*/
 		InsertQuick("DigestDB","",IQF(),"flush")
 		
-		FileDelete,%a_scriptdir%\%ModFullName%.json
-		FileAppend,% JSON.dump(digest),%a_scriptdir%\%ModFullName%.json
+		;FileDelete,%a_scriptdir%\%ModFullName%.json
+		;FileAppend,% JSON.dump(digest),%a_scriptdir%\%ModFullName%.json
 		
 		FileAppend,% ModFullName " : Time Complete = " A_Now " : Duration = " (A_TickCount - StartTime) / 1000 "`n",%a_scriptdir%\_timestamps.txt
 		;If (a_loopfilename = gotomod) ;AND (gotomod != "")

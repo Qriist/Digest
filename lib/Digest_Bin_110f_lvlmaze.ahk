@@ -5,7 +5,7 @@ Digest_Bin_110f_lvlmaze(BinToDecompile)
 	Bin := FileOpen(BinToDecompile,"r")
 	Bin.Read(4)
 	RecordSize := 28
-
+	
 	loop, % (Bin.Length  - 4) / RecordSize
 	{
 		If ( (A_TickCount - StartTime) >= 10 ) OR (a_index=1)
@@ -23,17 +23,14 @@ Digest_Bin_110f_lvlmaze(BinToDecompile)
 		Record["SizeX"] := Bin.ReadUInt() 
 		Record["SizeY"] := Bin.ReadUInt() 
 		Record["Merge"] := Bin.ReadUInt()
-		if a_index = 1
-		{
-			For k,v in Record
-				Digest[ModFullName,"Keys","Decompile",Module] .= k ","
-			Digest[ModFullName,"Keys","Decompile",Module] := RTrim(Digest[ModFullName,"Keys","Decompile",Module],",")
-		}
+		
 		For k,v in Record
 		{
 			KeyCounter += 1
 			KeySize += StrLen(v)
 		}
+		InsertQuick("DigestDB","Decompile | " module,Record)		
+		
 		
 	}
 }

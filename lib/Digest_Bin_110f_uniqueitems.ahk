@@ -5,7 +5,7 @@ Digest_Bin_110f_uniqueitems(BinToDecompile)
 	Bin := FileOpen(BinToDecompile,"r")
 	Bin.Read(4)
 	RecordSize := 332
-
+	
 	loop, % (Bin.Length  - 4) / RecordSize
 	{
 		If ( (A_TickCount - StartTime) >= 10 ) OR (a_index=1)
@@ -96,13 +96,6 @@ Digest_Bin_110f_uniqueitems(BinToDecompile)
 		Record["min12"] := Bin.ReadInt() 
 		Record["max12"] := Bin.ReadInt()
 		
-		if a_index = 1
-		{
-			For k,v in Record
-				Digest[ModFullName,"Keys","Decompile",Module] .= k ","
-			Digest[ModFullName,"Keys","Decompile",Module] := RTrim(Digest[ModFullName,"Keys","Decompile",Module],",")
-		}
-		
 		Kill=iPadding30,iPadding0
 		RecordKill(Record,kill,0)
 		
@@ -112,6 +105,9 @@ Digest_Bin_110f_uniqueitems(BinToDecompile)
 		Kill=prop|12
 		killdepend=par,min,max
 		RecordKill(Record,kill,-1,killdepend)
+		
+		InsertQuick("DigestDB","Decompile | " module,Record)		
+		
 		For k,v in Record
 		{
 			KeyCounter += 1

@@ -5,7 +5,7 @@ Digest_Bin_110f_misc(BinToDecompile)
 	Bin := FileOpen(BinToDecompile,"r")
 	Bin.Read(4)
 	RecordSize := 424
-
+	
 	loop, % (Bin.Length  - 4) / RecordSize
 	{
 		If ( (A_TickCount - StartTime) >= 10 ) OR (a_index=1)
@@ -197,14 +197,19 @@ Digest_Bin_110f_misc(BinToDecompile)
 		Record["multibuy"] := Bin.ReadUChar() 
 		Record["acPad20"] := Trim(Bin.Read(2))
 		
-		if a_index = 1
+		
+		For Index, NPC in ["Cain","Fara","Akara","Alkor","Elzix","Gheed","Halbu","Malah","Ormus"
+			,"Charsi","Dreyha","Hralti","Larzuk","Asheara","Drognan","Jamella","Lysander"]
 		{
-			For k,v in Record
-				Digest[ModFullName,"Keys","Decompile",Module] .= k ","
-			Digest[ModFullName,"Keys","Decompile",Module] := RTrim(Digest[ModFullName,"Keys","Decompile",Module],",")
+			Kill := NPC "Min,"
+				. NPC "Max,"
+				. NPC "MagicMin,"
+				. NPC "MagicMax"
+			RecordKill(Record,Kill,0)
+			
+			Kill := NPC "MagicLvl"
+			RecordKill(Record,Kill,255)			
 		}
-		Kill=AkaraMin,GheedMin,CharsiMin,FaraMin,LysanderMin,DrognanMin,HraltiMin,AlkorMin,OrmusMin,ElzixMin,AshearaMin,CainMin,HalbuMin,JamellaMin,MalahMin,LarzukMin,DrehyaMin,AkaraMax,GheedMax,CharsiMax,FaraMax,LysanderMax,DrognanMax,HraltiMax,AlkorMax,OrmusMax,ElzixMax,AshearaMax,CainMax,HalbuMax,JamellaMax,MalahMax,LarzukMax,DrehyaMax,AkaraMagicMin,GheedMagicMin,CharsiMagicMin,FaraMagicMin,LysanderMagicMin,DrognanMagicMin,HraltiMagicMin,AlkorMagicMin,OrmusMagicMin,ElzixMagicMin,AshearaMagicMin,CainMagicMin,HalbuMagicMin,JamellaMagicMin,MalahMagicMin,LarzukMagicMin,DrehyaMagicMin,AkaraMagicMax,GheedMagicMax,CharsiMagicMax,FaraMagicMax,LysanderMagicMax,DrognanMagicMax,HraltiMagicMax,AlkorMagicMax,OrmusMagicMax,ElzixMagicMax,AshearaMagicMax,CainMagicMax,HalbuMagicMax,JamellaMagicMax,MalahMagicMax,LarzukMagicMax,DrehyaMagicMax,AkaraMagicLvl,GheedMagicLvl,CharsiMagicLvl,FaraMagicLvl,LysanderMagicLvl,DrognanMagicLvl,HraltiMagicLvl,AlkorMagicLvl,OrmusMagicLvl,ElzixMagicLvl,AshearaMagicLvl,CainMagicLvl,HalbuMagicLvl,JamellaMagicLvl,MalahMagicLvl,LarzukMagicLvl,DrehyaMagicLvl
-		RecordKill(Record,Kill,0)
 		
 		Kill=stat|3,cstate|2
 		RecordKill(Record,Kill,65535)
@@ -214,6 +219,10 @@ Digest_Bin_110f_misc(BinToDecompile)
 		
 		Kill=acPadding,acPad|20,bPad|6
 		RecordKill(Record,Kill,"")
+		
+		
+		InsertQuick("DigestDB","Decompile | " module,Record)		
+		
 		For k,v in Record
 		{
 			KeyCounter += 1

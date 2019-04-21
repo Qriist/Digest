@@ -5,7 +5,7 @@ Digest_Bin_110f_skills(BinToDecompile)
 	Bin := FileOpen(BinToDecompile,"r")
 	Bin.Seek(4)
 	RecordSize := 572
-
+	
 	loop, % (Bin.Length  - 4) / RecordSize
 	{
 		If ( (A_TickCount - StartTime) >= 10 ) OR (a_index=1)
@@ -274,12 +274,6 @@ Digest_Bin_110f_skills(BinToDecompile)
 		Record["cost mult"] := Bin.ReadUInt() 
 		Record["cost add"] := Bin.ReadUInt()
 		
-		if a_index = 1
-		{
-			For k,v in Record
-				Digest[ModFullName,"Keys","Decompile",Module] .= k ","
-			Digest[ModFullName,"Keys","Decompile",Module] := RTrim(Digest[ModFullName,"Keys","Decompile",Module],",")
-		}
 		
 		Kill=iPadding|119,auraeventfunc|3,auratgteventfunc,cltprgfunc|3,dosound,dosound a,dosound b,ELevLen1|3,EMax,EMaxLev|5,EMin,EMinLev|5,etypea|2,etypeb|2,itypea|3,itypeb|3,MaxDam,MaxLevDam|5,MinDam,MinLevDam|5,Param|8,srvprgfunc|3
 		RecordKill(Record,kill,0)
@@ -292,6 +286,9 @@ Digest_Bin_110f_skills(BinToDecompile)
 		
 		kill=sumsk$calc|5
 		RecordKill(Record,Kill,4294967295,,,"$")
+		
+		InsertQuick("DigestDB","Decompile | " module,Record)		
+		
 		For k,v in Record
 		{
 			KeyCounter += 1

@@ -5,7 +5,7 @@ Digest_Bin_110f_experience(BinToDecompile)
 	Bin := FileOpen(BinToDecompile,"r")
 	Bin.Read(4)
 	RecordSize := 32
-
+	
 	loop, % (Bin.Length  - 4) / RecordSize
 	{
 		If ( (A_TickCount - StartTime) >= 10 ) OR (a_index=1)
@@ -24,12 +24,9 @@ Digest_Bin_110f_experience(BinToDecompile)
 		Record["Druid"] := Bin.ReadUInt() 
 		Record["Assassin"] := Bin.ReadUInt() 
 		Record["ExpRatio"] := Bin.ReadUInt()
-		if a_index = 1
-		{
-			For k,v in Record
-				Digest[ModFullName,"Keys","Decompile",Module] .= k ","
-			Digest[ModFullName,"Keys","Decompile",Module] := RTrim(Digest[ModFullName,"Keys","Decompile",Module],",")
-		}
+		
+		InsertQuick("DigestDB","Decompile | " module,Record)		
+		
 		For k,v in Record
 		{
 			KeyCounter += 1

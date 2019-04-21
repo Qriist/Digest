@@ -16,8 +16,8 @@ Digest_Bin_110f_charstats(BinToDecompile)
 		;Record size: 196
 		RecordID := a_index 
 		Record := Digest[ModFullName,"Decompile",Module,RecordID] := {}
-		Record["head"] := Bin.Read(32)
-		Record["class"] := Bin.Read(16)
+		Record["head"] := Trim(Bin.Read(32))
+		Record["class"] := Trim(Bin.Read(16))
 		Record["str"] := Bin.ReadUChar() 
 		Record["dex"] := Bin.ReadUChar() 
 		Record["int"] := Bin.ReadUChar() 
@@ -41,8 +41,8 @@ Digest_Bin_110f_charstats(BinToDecompile)
 		Record["StaminaPerVitality"] := Bin.ReadUChar() 
 		Record["ManaPerMagic"] := Bin.ReadUChar() 
 		Record["BlockFactor"] := Bin.ReadUChar() 
-		Record["acPadding"] := Bin.Read(2) 
-		Record["baseWClass"] := Bin.Read(4)
+		Record["acPadding"] := Trim(Bin.Read(2))
+		Record["baseWClass"] := Trim(Bin.Read(4))
 		Record["StatPerLevel"] := Bin.ReadUChar() 
 		Record["iPadding1"] := Bin.ReadUChar() 
 		Record["StrAllSkills"] := Bin.ReadUShort() 
@@ -65,7 +65,7 @@ Digest_Bin_110f_charstats(BinToDecompile)
 		Record["StrClassOnly"] := Bin.ReadUShort() 
 		Loop,10
 		{
-			Record["item" a_index] := Bin.Read(4)
+			Record["item" a_index] := Trim(Bin.Read(4))
 			Record["item" a_index "loc"] := Bin.ReadUChar() 
 			Record["item" a_index "count"] := Bin.ReadUChar() 
 			Bin.Read(2)
@@ -76,19 +76,15 @@ Digest_Bin_110f_charstats(BinToDecompile)
 		
 		Record["acTail"] := Bin.read(2)
 		
-		if a_index = 1
-		{
-			For k,v in Record
-				Digest[ModFullName,"Keys","Decompile",Module] .= k ","
-			Digest[ModFullName,"Keys","Decompile",Module] := RTrim(Digest[ModFullName,"Keys","Decompile",Module],",")
-		}
-		
 		Kill=Skill|10
 		RecordKill(Record,kill,0)
 		
 		Kill=item$|15
 		KillDepend=item$loc,item$count
 		RecordKill(Record,kill,"    ",KillDepend,,"$")
+		
+		InsertQuick("DigestDB","Decompile | " module,Record)		
+		
 		For k,v in Record
 		{
 			KeyCounter += 1

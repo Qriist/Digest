@@ -5,7 +5,7 @@ Digest_Bin_110f_automagic(BinToDecompile)
 	Bin := FileOpen(BinToDecompile,"r")
 	Bin.Read(4)
 	RecordSize := 144
-
+	
 	loop, % (Bin.Length  - 4) / RecordSize
 	{
 		If ( (A_TickCount - StartTime) >= 10 ) OR (a_index=1)
@@ -59,22 +59,43 @@ Digest_Bin_110f_automagic(BinToDecompile)
 		Record["multiply"] := Bin.ReadUInt() 
 		Record["add"] := Bin.ReadUInt()
 		
-		if a_index = 1
-		{
-			For k,v in Record
-				Digest[ModFullName,"Keys","Decompile",Module] .= k ","
-			Digest[ModFullName,"Keys","Decompile",Module] := RTrim(Digest[ModFullName,"Keys","Decompile",Module],",")
-		}
 		
-		Kill=itype|7,etype|5
+		
+		Kill:= "itype|7,"
+			. "etype|5,"
+			. "level,"
+			. "levelreq,"
+			. "classlevelreq,"
+			. "maxlevel,"
+			. "iPadding21,"
+			. "group,"
+			. "add,"
+			. "multiply,"
+			. "divide,"
+			. "rare,"
+			. "spawnable,"
+			. "TblIndex,"
+			. "version,"
+			. "frequency"
 		RecordKill(Record,kill,0)
 		
-		Kill=itype|7,etype|5
+		Kill := "class,"
+			. "classspecific,"
+			. "transformcolor"
+		RecordKill(Record,Kill,255)
+		
+		Kill := "itype|7,"
+			. "etype|5"
 		RecordKill(Record,kill,65535)
 		
-		Kill=mod$code|15
-		KillDepend=mod$param,mod$min,mod$max
+		Kill := "mod$code|15"
+		KillDepend := "mod$param,"
+			. "mod$min,"
+			. "mod$max"
 		RecordKill(Record,kill,4294967295,KillDepend,,"$")
+		
+		InsertQuick("DigestDB","Decompile | " module,Record)		
+		
 		
 		For k,v in Record
 		{

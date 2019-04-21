@@ -1,5 +1,6 @@
 FunctionCheck(num,code,param,min,max,k,v,ugv := "")
 {
+	;~ SendExtraData := 1
 	;~ before printing a stat, check if it has a dgrp - if yes, check if all stats with the same dgrp are available , if yes, check if all have the same value, if yes -> group, if not,print each
 	/*
 	rec = operating array
@@ -419,7 +420,9 @@ FunctionCheck(num,code,param,min,max,k,v,ugv := "")
 					;~ if num in 0
 		if r !=
 		;~ If DescFunc in 15
-			return r  " {{func:" num "}} {{desc:" DescFunc "}}* {{ISC:" tempcode "}} {{d:" DescVal "}}"  a_space v
+		if (SendExtraData = "")
+			return r  
+		else return r " {{func:" num "}} {{desc:" DescFunc "}}* {{ISC:" tempcode "}} {{d:" DescVal "}}"  a_space v
 		;~ If DescFunc in -5,-6,-7,0,5,10,21,22,25,26,29,30
 			;~ return r " {{func:" num "}} {{desc:" DescFunc "}}*"
 		;~ else if num in -5,-6,-7,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30

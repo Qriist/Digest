@@ -5,7 +5,7 @@ Digest_Bin_110f_hitclass(BinToDecompile)
 	Bin := FileOpen(BinToDecompile,"r")
 	Bin.Read(4)
 	RecordSize := 4
-
+	
 	loop, % (Bin.Length  - 4) / RecordSize
 	{
 		If ( (A_TickCount - StartTime) >= 10 ) OR (a_index=1)
@@ -16,17 +16,13 @@ Digest_Bin_110f_hitclass(BinToDecompile)
 		;Record size: 4
 		RecordID := a_index
 		Record := Digest[ModFullName,"Decompile",Module,RecordID] := {}
-		if a_index = 1
-		{
-			For k,v in Record
-				Digest[ModFullName,"Keys","Decompile",Module] .= k ","
-			Digest[ModFullName,"Keys","Decompile",Module] := RTrim(Digest[ModFullName,"Keys","Decompile",Module],",")
-		}
+		
+		InsertQuick("DigestDB","Decompile | " module,Record)		
+		
 		For k,v in Record
 		{
 			KeyCounter += 1
 			KeySize += StrLen(v)
 		}
-		
 	}
 }

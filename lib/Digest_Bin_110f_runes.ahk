@@ -5,7 +5,7 @@ Digest_Bin_110f_runes(BinToDecompile)
 	Bin := FileOpen(BinToDecompile,"r")
 	Bin.Seek(4)
 	RecordSize := 288
-
+	
 	loop, % (Bin.Length  - 4) / RecordSize
 	{
 		If ( (A_TickCount - StartTime) >= 10 ) OR (a_index=1)
@@ -16,13 +16,16 @@ Digest_Bin_110f_runes(BinToDecompile)
 		;Record size: 288
 		RecordID := a_index 
 		Record := Digest[ModFullName,"Decompile",Module,RecordID] := {}
+		Record["ModNum"] := ModNum ; For DBA
+		Record["RecordID"] := RecordID ; For DBA
+		
 		Record["Name"] := Trim(Bin.Read(64))
 		Record["Rune Name"] := Trim(Bin.Read(64))
 		Record["complete"] := Bin.ReadUChar() 
 		Record["server"] := Bin.ReadUChar() 
 		Record["iPadding32"] := Bin.ReadUShort() 
 		Record["iPadding33"] := Bin.ReadUShort() 
-
+		
 		Record["itype1"] := Bin.ReadUShort() 
 		Record["itype2"] := Bin.ReadUShort() 
 		Record["itype3"] := Bin.ReadUShort() 
@@ -67,27 +70,30 @@ Digest_Bin_110f_runes(BinToDecompile)
 		Record["T1Min7"] := Bin.ReadInt() 
 		Record["T1Max7"] := Bin.ReadInt()
 		
-		if a_index = 1
-		{
-			For k,v in Record
-				Digest[ModFullName,"Keys","Decompile",Module] .= k ","
-			Digest[ModFullName,"Keys","Decompile",Module] := RTrim(Digest[ModFullName,"Keys","Decompile",Module],",")
-		}
 		
-		kill=itype|6,etype|3,server,complete
+		
+		Kill := "itype|6,"
+			. "etype|3,"
+			. "server,"
+			. "complete,"
+			. "iPadding32,"
+			. "iPadding33"
 		RecordKill(Record,kill,0)
 		
-		kill=Rune|6
+		Kill := "Rune|6"
 		RecordKill(Record,kill,4294967295)
 		
-		kill=T1Code|7
-		killdepend=T1Param,T1Min,T1Max
-		RecordKill(Record,kill,-1,killdepend)
+		Kill := "T1Code|7"
+		KillDepend := "T1Param,"
+			. "T1Min,"
+			. "T1Max"
+		RecordKill(Record,Kill,-1,KillDepend)
+		
 		For k,v in Record
 		{
 			KeyCounter += 1
 			KeySize += StrLen(v)
 		}
-		
+		InsertQuick("DigestDB","Decompile | " module,Record)
 	}
 }

@@ -5,7 +5,7 @@ Digest_Bin_110f_itemstatcost(BinToDecompile)
 	Bin := FileOpen(BinToDecompile,"r")
 	Bin.Seek(4)
 	RecordSize := 324
-
+	
 	loop, % (Bin.Length  - 4) / RecordSize
 	{
 		If ( (A_TickCount - StartTime) >= 10 ) OR (a_index=1)
@@ -24,7 +24,7 @@ Digest_Bin_110f_itemstatcost(BinToDecompile)
 		;Start bitfield operations
 		Flags := Record["CombinedBits1"] Record["CombinedBits2"]
 		If Flags = 
-		msgbox,YOU HAVE NOT FIXED THE BITFIELDS FOR MODULE %module%.
+			msgbox,YOU HAVE NOT FIXED THE BITFIELDS FOR MODULE %module%.
 		Record["iPadding1_1"] := substr(Flags,3,3) 
 		Record["direct"] := substr(Flags,4,1) 
 		Record["itemspecific"] := substr(Flags,5,1) 
@@ -141,12 +141,6 @@ Digest_Bin_110f_itemstatcost(BinToDecompile)
 		Record["iPadding79"] := Bin.ReadUInt() 
 		Record["stuff"] := Bin.ReadUInt()
 		
-		if a_index = 1
-		{
-			For k,v in Record
-				Digest[ModFullName,"Keys","Decompile",Module] .= k ","
-			Digest[ModFullName,"Keys","Decompile",Module] := RTrim(Digest[ModFullName,"Keys","Decompile",Module],",")
-		}
 		
 		Kill := "op"
 		KillDepend := "op base,op param,op stat1,op stat2,op stat3,bUknown"
@@ -154,9 +148,12 @@ Digest_Bin_110f_itemstatcost(BinToDecompile)
 		
 		kill := "itemevent|2,maxstat,op base,op stat|3"
 		RecordKill(Record,kill,65535,,,"$")
-
+		
 		Kill := "stuff,op param,itemeventfunc|2,iPadding|79"
 		RecordKill(Record,kill,0)
+		
+		InsertQuick("DigestDB","Decompile | " module,Record)		
+		
 		For k,v in Record
 		{
 			KeyCounter += 1

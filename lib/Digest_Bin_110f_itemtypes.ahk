@@ -5,7 +5,7 @@ Digest_Bin_110f_itemtypes(BinToDecompile)
 	Bin := FileOpen(BinToDecompile,"r")
 	Bin.Seek(4)
 	RecordSize := 228
-
+	
 	loop, % (Bin.Length  - 4) / RecordSize
 	{
 		If ( (A_TickCount - StartTime) >= 10 ) OR (a_index=1)
@@ -51,12 +51,9 @@ Digest_Bin_110f_itemtypes(BinToDecompile)
 		Record["InvGfx4"] := Trim(Bin.Read(32))
 		Record["InvGfx5"] := Trim(Bin.Read(32))
 		Record["InvGfx6"] := Trim(Bin.Read(32))
-		if a_index = 1
-		{
-			For k,v in Record
-				Digest[ModFullName,"Keys","Decompile",Module] .= k ","
-			Digest[ModFullName,"Keys","Decompile",Module] := RTrim(Digest[ModFullName,"Keys","Decompile",Module],",")
-		}
+		
+		InsertQuick("DigestDB","Decompile | " module,Record)		
+		
 		For k,v in Record
 		{
 			KeyCounter += 1

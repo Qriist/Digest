@@ -5,7 +5,7 @@ Digest_Bin_110f_gems(BinToDecompile)
 	Bin := FileOpen(BinToDecompile,"r")
 	Bin.Read(4)
 	RecordSize := 192
-
+	
 	loop, % (Bin.Length  - 4) / RecordSize
 	{
 		If ( (A_TickCount - StartTime) >= 10 ) OR (a_index=1)
@@ -77,6 +77,10 @@ Digest_Bin_110f_gems(BinToDecompile)
 		Kill=shieldmod$code|15
 		KillDepend=shieldmod$param,shieldmod$min,shieldmod$max
 		RecordKill(Record,kill,4294967295,KillDepend,,"$")
+		
+		
+		InsertQuick("DigestDB","Decompile | " module,Record)		
+		
 		For k,v in Record
 		{
 			KeyCounter += 1

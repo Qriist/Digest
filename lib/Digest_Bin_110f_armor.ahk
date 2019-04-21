@@ -5,7 +5,7 @@ Digest_Bin_110f_armor(BinToDecompile)
 	Bin := FileOpen(BinToDecompile,"r")
 	Bin.Read(4)
 	RecordSize := 424
-
+	
 	loop, % (Bin.Length  - 4) / RecordSize
 	{
 		If ( (A_TickCount - StartTime) >= 10 ) OR (a_index=1)
@@ -200,27 +200,37 @@ Digest_Bin_110f_armor(BinToDecompile)
 		Record["HellUpgrade"] := Trim(Bin.Read(4))
 		Record["iPadding105"] := Bin.ReadUInt()
 		
-		if a_index = 1
-		{
-			For k,v in Record
-				Digest[ModFullName,"Keys","Decompile",Module] .= k ","
-			Digest[ModFullName,"Keys","Decompile",Module] := RTrim(Digest[ModFullName,"Keys","Decompile",Module],",")
-		}
+		;if a_index = 1
+		;{
+			;For k,v in Record
+				;Digest[ModFullName,"Keys","Decompile",Module] .= k ","
+			;Digest[ModFullName,"Keys","Decompile",Module] := RTrim(Digest[ModFullName,"Keys","Decompile",Module],",")
+		;}
 		
-		Kill=AkaraMin,GheedMin,CharsiMin,FaraMin,LysanderMin,DrognanMin,HraltiMin,AlkorMin,OrmusMin,ElzixMin,AshearaMin,CainMin,HalbuMin,JamellaMin,MalahMin,LarzukMin,DrehyaMin,AkaraMax,GheedMax,CharsiMax,FaraMax,LysanderMax,DrognanMax,HraltiMax,AlkorMax,OrmusMax,ElzixMax,AshearaMax,CainMax,HalbuMax,JamellaMax,MalahMax,LarzukMax,DrehyaMax,AkaraMagicMin,GheedMagicMin,CharsiMagicMin,FaraMagicMin,LysanderMagicMin,DrognanMagicMin,HraltiMagicMin,AlkorMagicMin,OrmusMagicMin,ElzixMagicMin,AshearaMagicMin,CainMagicMin,HalbuMagicMin,JamellaMagicMin,MalahMagicMin,LarzukMagicMin,DrehyaMagicMin,AkaraMagicMax,GheedMagicMax,CharsiMagicMax,FaraMagicMax,LysanderMagicMax,DrognanMagicMax,HraltiMagicMax,AlkorMagicMax,OrmusMagicMax,ElzixMagicMax,AshearaMagicMax,CainMagicMax,HalbuMagicMax,JamellaMagicMax,MalahMagicMax,LarzukMagicMax,DrehyaMagicMax,iPadding|100,absorbs,auto prefix,belt,block,compactsave,component,gemsockets,legs,lightradius,maxdam,maxstack,mindam,minstack,missletype,nodurability,qntwarning,quest,
-		RecordKill(Record,Kill,0)
+		For Index, NPC in ["Cain","Fara","Akara","Alkor","Elzix","Gheed","Halbu","Malah","Ormus"
+			,"Charsi","Dreyha","Hralti","Larzuk","Asheara","Drognan","Jamella","Lysander"]
+		{
+			Kill := NPC "Min,"
+				. NPC "Max,"
+				. NPC "MagicMin,"
+				. NPC "MagicMax"
+			RecordKill(Record,Kill,0)
+			
+			Kill := NPC "MagicLvl"
+			RecordKill(Record,Kill,255)			
+		}
 		
 		Kill=iPadding|105
 		RecordKill(Record,Kill,"")
-		
-		Kill=AkaraMagicLvl,GheedMagicLvl,CharsiMagicLvl,FaraMagicLvl,LysanderMagicLvl,DrognanMagicLvl,HraltiMagicLvl,AlkorMagicLvl,OrmusMagicLvl,ElzixMagicLvl,AshearaMagicLvl,CainMagicLvl,HalbuMagicLvl,JamellaMagicLvl,MalahMagicLvl,LarzukMagicLvl,DrehyaMagicLvl
-		RecordKill(Record,Kill,255)
 		
 		Kill=iPadding|105
 		RecordKill(Record,Kill,4294967295)
 		
 		Kill=NightmareUpgrade,HellUpgrade
 		RecordKill(Record,Kill,"xxx")
+		
+		InsertQuick("DigestDB","Decompile | " module,Record)	
+		
 		For k,v in Record
 		{
 			KeyCounter += 1

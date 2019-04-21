@@ -5,7 +5,7 @@ Digest_Bin_110f_levels(BinToDecompile)
 	Bin := FileOpen(BinToDecompile,"r")
 	Bin.Read(4)
 	RecordSize := 544
-
+	
 	loop, % (Bin.Length  - 4) / RecordSize
 	{
 		If ( (A_TickCount - StartTime) >= 10 ) OR (a_index=1)
@@ -201,21 +201,19 @@ Digest_Bin_110f_levels(BinToDecompile)
 		Record["BlankScreen"] := Bin.ReadUInt() 
 		Record["SoundEnv"] := Bin.ReadUInt()
 		
-		if a_index = 1
-		{
-			For k,v in Record
-				Digest[ModFullName,"Keys","Decompile",Module] .= k ","
-			Digest[ModFullName,"Keys","Decompile",Module] := RTrim(Digest[ModFullName,"Keys","Decompile",Module],",")
-		}
 		
 		kill=mon|25,nmon|25,umon|25,cmon|4
 		RecordKill(Record,Kill,65535)
 		
-		kill=iPadding|131,cpct|4
+		kill=iPadding|131,cpct|4m,camt4
 		RecordKill(Record,Kill,0)
 		
 		kill=ObjGrp|8,ObjPrb
 		RecordKill(Record,Kill,0,,-1)
+		
+		
+		InsertQuick("DigestDB","Decompile | " module,Record)		
+		
 		For k,v in Record
 		{
 			KeyCounter += 1

@@ -35,12 +35,7 @@ Digest_Bin_110f_raresuffix(BinToDecompile)
 		Record["name"] := Trim(Bin.Read(32))
 		Record["iPadding17"] := Bin.ReadUShort()
 		
-		if a_index = 1
-		{
-			For k,v in Record
-				Digest[ModFullName,"Keys","Decompile",Module] .= k ","
-			Digest[ModFullName,"Keys","Decompile",Module] := RTrim(Digest[ModFullName,"Keys","Decompile",Module],",")
-		}
+
 		Kill=itype|7,etype|4
 		RecordKill(Record,kill,0)
 		For k,v in Record

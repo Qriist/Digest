@@ -3,7 +3,7 @@ Digest_JSON_110f_runes()
 {
 	global
 	ItemsIndex=0
-	If Digest[ModFullName,"Recompile","Items"] = ""
+	If (Digest[ModFullName,"Recompile","Items"] = "")
 	{
 		For k, v in Digest[ModFullName,"Decompile","Armor"]
 		{

@@ -24,14 +24,11 @@ Digest_Bin_110f_books(BinToDecompile)
 		Record["BookSkill"] := Bin.ReadUInt() 
 		Record["BaseCost"] := Bin.ReadUInt() 
 		Record["CostPerCharge"] := Bin.ReadUInt() 
-		Record["ScrollSpellCode"] := Bin.Read(4) 
+		Record["ScrollSpellCode"] := Trim(Bin.Read(4))
 		Record["BookSpellCode"] := Bin.Read(4)
-		if a_index = 1
-		{
-			For k,v in Record
-				Digest[ModFullName,"Keys","Decompile",Module] .= k ","
-			Digest[ModFullName,"Keys","Decompile",Module] := RTrim(Digest[ModFullName,"Keys","Decompile",Module],",")
-		}
+		
+		InsertQuick("DigestDB","Decompile | " module,Record)		
+		
 		For k,v in Record
 		{
 			KeyCounter += 1

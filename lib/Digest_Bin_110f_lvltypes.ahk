@@ -5,7 +5,7 @@ Digest_Bin_110f_lvltypes(BinToDecompile)
 	Bin := FileOpen(BinToDecompile,"r")
 	Bin.Read(4)
 	RecordSize := 1928
-
+	
 	loop, % (Bin.Length  - 4) / RecordSize
 	{
 		If ( (A_TickCount - StartTime) >= 10 ) OR (a_index=1)
@@ -20,15 +20,12 @@ Digest_Bin_110f_lvltypes(BinToDecompile)
 			Record["File " a_index] := Bin.Read(60) 
 		Record["Act"] := Bin.ReadUInt() 
 		Record["Expansion"] := Bin.ReadUInt()
-		if a_index = 1
-		{
-			For k,v in Record
-				Digest[ModFullName,"Keys","Decompile",Module] .= k ","
-			Digest[ModFullName,"Keys","Decompile",Module] := RTrim(Digest[ModFullName,"Keys","Decompile",Module],",")
-		}
 		
 		Kill=File |32
 		RecordKill(Record,Kill,0)
+		
+		InsertQuick("DigestDB","Decompile | " module,Record)		
+		
 		For k,v in Record
 		{
 			KeyCounter += 1
