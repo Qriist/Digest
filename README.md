@@ -1,1 +1,1 @@
-readme deleted... oops.
+Reverse engineering Diablo II binary files.
