@@ -433,7 +433,6 @@
 			key := ""
 			loop{
 				nullTest := tbl.ReadUChar() ;read into local variable $key everything up to and including the next null byte.
-
 				if !nullTest    
 					Break   ;get rid of the trailing null byte on $key
 				key .= chr(nullTest)    
