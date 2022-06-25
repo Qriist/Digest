@@ -1,6 +1,6 @@
 ﻿#Include <class_EasyIni>
 #Include <class_digest>
-#Include <class_SQLiteDB>
+#Include <class_SQLiteDB_modified>
 #Include <functions>
 #Include <string_things>
 #Include <LibCrypt>
@@ -18,11 +18,17 @@ DigestIni := class_easyIni(a_scriptdir "\Digest.ini")
 if (Digestini["Digest","Diablo II Dir"] = "")
 {
 	Digestini["Digest","Diablo II Dir"] := FileSelectFolder()
+    if (Digestini["Digest","Diablo II Dir"] = ""){
+        msgbox % "No folder selected. Exiting."
+        ExitApp
+    }
 	DigestIni.save(a_scriptdir "\Digest.ini")
-}
+}  
 
 Digest := new class_digest
 Digest.init(Digestini["Digest","Diablo II Dir"],DigestIni["Custom Tbl Load"],a_scriptdir "\Digest.db") ;clean temp folder, set base D2 dir, init db
 Digest.scanForMods()
 Digest.createMasterListFile()
 Digest.decompileAllMods()
+
+ExitApp

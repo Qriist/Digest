@@ -12,12 +12,27 @@
 		this.purgeTemp()
 		this.registerD2Dir(inputPathToD2)
 		this.DigestDB := new SQLiteDB
-		If !this.DigestDB.opendb(a_scriptdir "\Digest.db")
-			
-		msgbox % "fail"
-		;todo:	generate DB from scratch
+
+
+		;If !this.DigestDB.opendb(a_scriptdir "\Digest.db")
+			;msgbox % "fail"
+		If !FileExist(a_scriptdir "\Digest.db"){
+			if !this.DigestDB.opendb(a_scriptdir "\Digest.db"){
+				msgbox % failed to create digest database
+				ExitApp
+			}
+
+			ddlObj := this.initDB()
+			for k,v in ddlObj
+				If !this.DigestDB.exec(v)
+					msgbox % clipboard := "---Failed to create table`n" v
+		} else {
+			If !this.DigestDB.opendb(a_scriptdir "\Digest.db")
+				msgbox % "fail"
+		}
 		this.customTbls := inputCustomTbls
 	}
+
 	purgeTemp(){
 		FileDelete, % A_ScriptDir "\temp\*"
 		Loop, files,% A_ScriptDir "\temp\*", D
@@ -58,8 +73,7 @@
 		FileOpen(a_scriptdir "\cache\listfile\masterListFile.txt","w").write(masterListFile)
 		this.purgeTemp()
 	}	
-	MPQ_Extract(MPQ_list,FileMaskToExtractFromMPQ,PathToExtractToDisk,UseFullPathing:=1,UseExternalListFile:="",Debug:=0)
-	{
+	MPQ_Extract(MPQ_list,FileMaskToExtractFromMPQ,PathToExtractToDisk,UseFullPathing:=1,UseExternalListFile:="",Debug:=0){
 		;~ Load order: MPQ_list[a_index]
 		;~ Priority order: MPQ_list[mpq_list.length()+1-a_index]		
 		static mopaqLoc := A_ScriptDir "\temp\mopaq_script.txt"
@@ -182,8 +196,8 @@
 	decompileMod(byref modArr){
 		If (modarr["d2core"] != "1.10f")	;limited until framework is complete
 			return
-		
 		this.gatherMpqLists(modArr,mpqChain,mpqNew,mpqOld)
+		;msgbox % "past gatherMpqLists"
 		this.gatherRawStrings(modarr,mpqChain)
 		this.decompileBins(modArr,mpqChain)
 		;msgbox % st_printarr(this.oldPatches)
@@ -364,9 +378,62 @@
 		Loop,Files,% a_scriptdir "\temp\data\global\excel\*.bin"
 		{
 			SplitPath,a_loopfilelongpath,FileName,FileDir,FileExt,FileBase,FileDrive
-			;this.decompileBin(FileBase,a_loopfile)
+			this.decompileBin(modArr["D2Core"],a_loopfilelongpath,FileBase)
 		}	
 		;this.purgeTemp()
+	}
+
+	decompileBin(binBaseName,CoreVersion,PassedFile){
+		this.methodSelector("decompile",binBaseName,CoreVersion,PassedFile)
+	}
+	methodSelector(Method,Module,CoreVersion,PassedFile){
+		;coordinates
+		;Methods: Decompile,Recompile,String
+		;PassedFile: a_scriptdir "\bin\" module ".bin"
+		static KnownCores := ["114d"
+		,"114b"
+		,"113d"
+		,"113c"
+		,"113a"
+		,"112a"
+		,"111b"
+		,"111"
+		,"110s"
+		,"110f"
+		,"110b"
+		,"110"
+		,"109d"
+		,"109b"
+		,"109"
+		,"108"
+		,"107"]
+		;~ ,"106" ;D2 Classic, possible future support.
+		;~ ,"105b"
+		;~ ,"104c"
+		;~ ,"104b"
+		;~ ,"103"
+		;~ ,"102"
+		;~ ,"101"
+		;~ ,"100"]
+		CoreTooHigh=1	;defaults here so it can walk backwards
+		For k,v in KnownCores
+		{
+			;~ msgbox % "Digest_" Method "_" v "_" Module
+			if (CoreTooHigh=1) ; This starts the selector at the appropriate version to walk back from
+			{
+				If (CoreVersion != v)
+					continue
+				Else
+					CoreTooHigh=0
+			}
+			If isfunc("Digest_" Method "_" v "_" Module)
+			{
+				Digest_%Method%_%v%_%module%(PassedFile)
+				return
+			}
+		}
+		msgbox % "method selector fail"
+		return 0 ;If not found, fail silently
 	}
 	tblConv_TblToTxt(inputTblPath){
 		;converted pretty much line by line from Mephansteras's 2001 standalone perl script. Idk where I found it.
@@ -465,4 +532,5 @@
 		}
 		return retStr
 	}
+	#include %A_ScriptDir%\lib\digest\class_digest_initDB.ahk
 }
