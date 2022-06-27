@@ -303,6 +303,30 @@ outJson := {}
 	outJson["armor","1.10f","Fields","HellUpgrade"] := props("read",,4)
 	outJson["armor","1.10f","Fields","iPadding105"] := props("ReadUInt")
 	outJson["armor","1.10f","Record Length"] := lengthCounter()
+	RecordKill =
+	(
+				For Index, NPC in ["Cain","Fara","Akara","Alkor","Elzix","Gheed","Halbu","Malah","Ormus","Charsi","Dreyha","Hralti","Larzuk","Asheara","Drognan","Jamella","Lysander"]
+				{
+					Kill := NPC "Min,"
+						. NPC "Max,"
+						. NPC "MagicMin,"
+						. NPC "MagicMax"
+					RecordKill(Record,Kill,0)
+					
+					Kill := NPC "MagicLvl"
+					RecordKill(Record,Kill,255)			
+				}
+				
+				Kill=iPadding|105
+				RecordKill(Record,Kill,"")
+				
+				Kill=iPadding|105
+				RecordKill(Record,Kill,4294967295)
+				
+				Kill=NightmareUpgrade,HellUpgrade
+				RecordKill(Record,Kill,"xxx")
+	)
+	outJson["armor","1.10f","RecordKill"] := a_tab a_tab a_tab a_tab RecordKill
 }
 
 {	;monstats2

@@ -7,6 +7,7 @@
 	static oldPatches := StrSplit("d2data,d2char,d2sfx,d2speech,d2music,d2video,d2delta,d2kfixup,d2exp,d2xvideo,d2xtalk,d2xmusic",",")
 	static customTbls := ""
 	static modStringArr := []
+	static binArr := []
 	;static DigestDB := ""
 	init(inputPathToD2,inputCustomTbls,inputDatabase){
 		this.purgeTemp()
@@ -386,27 +387,27 @@
 	decompileBin(binBaseName,CoreVersion,PassedFile){
 		this.methodSelector("decompile",binBaseName,CoreVersion,PassedFile)
 	}
-	methodSelector(Method,Module,CoreVersion,PassedFile){
+	methodSelector(ModID,Method,Module,CoreVersion,PassedFile){
 		;coordinates
 		;Methods: Decompile,Recompile,String
 		;PassedFile: a_scriptdir "\bin\" module ".bin"
-		static KnownCores := ["114d"
-		,"114b"
-		,"113d"
-		,"113c"
-		,"113a"
-		,"112a"
-		,"111b"
-		,"111"
-		,"110s"
-		,"110f"
-		,"110b"
-		,"110"
-		,"109d"
-		,"109b"
-		,"109"
-		,"108"
-		,"107"]
+		static KnownCores := ["1.14d"
+		,"1.14b"
+		,"1.13d"
+		,"1.13c"
+		,"1.13a"
+		,"1.12a"
+		,"1.11b"
+		,"1.11"
+		,"1.10s"
+		,"1.10f"
+		,"1.10b"
+		,"1.10"
+		,"1.09d"
+		,"1.09b"
+		,"1.09"
+		,"1.08"
+		,"1.07"]
 		;~ ,"106" ;D2 Classic, possible future support.
 		;~ ,"105b"
 		;~ ,"104c"
@@ -426,11 +427,14 @@
 				Else
 					CoreTooHigh=0
 			}
-			If isfunc("Digest_" Method "_" v "_" Module)
-			{
-				Digest_%Method%_%v%_%module%(PassedFile)
-				return
-			}
+			If !this.%method%_%module%(ModID,v,passedFile)
+				continue
+
+			;If isfunc("Digest_" Method "_" v "_" Module)
+			;{
+			;	Digest_%Method%_%v%_%module%(PassedFile)
+			;	return
+			;}
 		}
 		msgbox % "method selector fail"
 		return 0 ;If not found, fail silently

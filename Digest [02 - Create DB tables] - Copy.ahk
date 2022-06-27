@@ -18,7 +18,7 @@ For k,v in jsonArr {
     bin := k
 ;    msgbox % bin
     outTable := a_tab a_tab "CREATE TABLE [Decompile | " bin "] (`n"
-        .   a_tab a_tab a_tab "[ModNum]" a_tab "INTEGER,`n"
+        .   a_tab a_tab a_tab "[ModID]" a_tab "INTEGER,`n"
         .   a_tab a_tab a_tab "[RecordID]" a_tab "INTEGER,`n"
     for k,v in v {
         version := k
