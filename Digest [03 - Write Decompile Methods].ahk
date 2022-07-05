@@ -66,7 +66,7 @@ for k,v in jsonArr{
     indent := indentCode(1)
     out .= indent "}`n"
     out .= "}`n"
-    msgbox % clipboard := out
+    ;msgbox % clipboard := out
 }
 
 

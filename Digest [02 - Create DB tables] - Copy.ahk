@@ -66,7 +66,7 @@ ExitApp
 
 sqliteTypeMapping(inputType,readLength){
     switch inputType {
-        case "int","ReadUInt","ReadUShort","ReadUChar","ReadShort" : {
+        case "int","ReadUInt","ReadUShort","ReadUChar","ReadShort","ReadChar","ReadInt" : {
             return "INTEGER"
         }
         case "read" : {
